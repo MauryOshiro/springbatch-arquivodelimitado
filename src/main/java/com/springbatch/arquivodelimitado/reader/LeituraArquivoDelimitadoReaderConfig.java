@@ -1,5 +1,6 @@
 package com.springbatch.arquivodelimitado.reader;
 
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -20,13 +21,29 @@ public class LeituraArquivoDelimitadoReaderConfig {
 	}
 	
 	@Bean
-	public FlatFileItemReader<Cliente> leituraArquivoDelimitadoReader(Resource arquivoClientes) {
+	public String[] fieldNames() {
+		Field[] declaredFields = Cliente.class.getDeclaredFields();
+		String[] names = new String[declaredFields.length];
+		
+		for(int i = 0; i < declaredFields.length; i++) {
+			String name = declaredFields[i].getName();
+			names[i] = name;
+			
+			System.out.println("Adicionado campo " + name + " na posição " + i);
+		}
+		
+		return names;
+	}
+	
+	@Bean
+	public FlatFileItemReader<Cliente> leituraArquivoDelimitadoReader(Resource arquivoClientes,
+			String[] names) {
 		return new FlatFileItemReaderBuilder<Cliente>()
 				.name("leituraArquivoDelimitadoReader")
 				.resource(arquivoClientes)
 				.delimited()
 				.delimiter(";")
-				.names(new String[] {"nome", "sobrenome", "idade", "email"})
+				.names(names)
 				.targetType(Cliente.class)
 				.build();
     }
