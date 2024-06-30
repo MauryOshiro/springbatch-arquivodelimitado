@@ -25,6 +25,7 @@ public class LeituraArquivoDelimitadoReaderConfig {
 				.name("leituraArquivoDelimitadoReader")
 				.resource(arquivoClientes)
 				.delimited()
+				.delimiter(";")
 				.names(new String[] {"nome", "sobrenome", "idade", "email"})
 				.targetType(Cliente.class)
 				.build();
